@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beautiful HTML — Elegant Single-File Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: 252 252 253;
+      --text: 20 22 26;
+      --muted: 110 115 125;
+      --brand: 88 101 242; /* indigo */
+      --brand-2: 255 124 93; /* coral */
+      --ring: 88 101 242;
+      --card: 255 255 255;
+      --shadow: 12 18 28;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: 16 17 20;
+        --text: 236 237 240;
+        --muted: 156 160 170;
+        --brand: 120 132 255;
+        --brand-2: 255 163 130;
+        --card: 24 26 31;
+        --shadow: 0 0 0;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: rgb(var(--text));
+      background:
+        radial-gradient(1200px 1200px at 100% -10%, rgba(var(--brand), .08), transparent 40%),
+        radial-gradient(1000px 800px at -10% 110%, rgba(var(--brand-2), .08), transparent 40%),
+        rgb(var(--bg));
+      line-height:1.6;
+    }
+    .container{width:min(1120px, 92vw); margin-inline:auto}
+    .btn{
+      --_bg: rgba(var(--brand),1);
+      --_fg: white;
+      display:inline-flex; align-items:center; gap:.6rem;
+      background: var(--_bg);
+      color: var(--_fg);
+      padding:.9rem 1.15rem; border-radius:1rem; border:0; cursor:pointer;
+      font-weight:600; letter-spacing:.2px; text-decoration:none;
+      box-shadow: 0 10px 24px rgba(var(--brand), .25);
+      transition: transform .12s ease, box-shadow .2s ease, opacity .2s ease;
+    }
+    .btn.secondary{ --_bg: rgba(var(--brand-2), 1) }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(var(--brand), .35) }
+    .btn:active{ transform: translateY(0) scale(.98) }
+
+    /* Navbar */
+    .nav{ position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(140%) blur(10px); background: linear-gradient(to bottom, rgba(255,255,255,.7), rgba(255,255,255,.25)); border-bottom: 1px solid rgba(120,120,120,.15)}
+    @media (prefers-color-scheme: dark){ .nav{ background: linear-gradient(to bottom, rgba(20,22,26,.55), rgba(20,22,26,.25)); border-color: rgba(255,255,255,.06) } }
+    .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding: .8rem 0 }
+    .brand{ display:flex; align-items:center; gap:.75rem; font-weight:800 }
+    .brand .logo{ width:36px; height:36px; border-radius:14px; background: conic-gradient(from 180deg, rgba(var(--brand) / 1), rgba(var(--brand-2) / 1)); box-shadow: 0 6px 18px rgba(var(--brand), .35) }
+    .nav a{ color: inherit; text-decoration:none; font-weight:600; opacity:.85 }
+    .nav .links{ display:flex; gap:1.1rem; align-items:center }
+
+    /* Hero */
+    .hero{ padding: 7rem 0 5rem; position:relative; overflow:hidden }
+    .h-eyebrow{ display:inline-block; font-size:.95rem; font-weight:700; letter-spacing: .14em; text-transform:uppercase; color: rgba(var(--muted), .95); margin-bottom: .8rem }
+    .h-title{ font-family: "Playfair Display", serif; font-weight:700; letter-spacing: -0.02em; line-height:1.1; font-size: clamp(2rem, 4.2vw + 1rem, 4rem); margin:0 0 1rem }
+    .h-sub{ max-width: 680px; font-size: clamp(1rem, .4vw + .9rem, 1.15rem); color: rgba(var(--muted), .95); margin-bottom: 1.6rem }
+    .h-cta{ display:flex; gap: .9rem; flex-wrap: wrap }
+    .orbit{ position:absolute; right:-160px; top:-80px; width:min(60vw,800px); aspect-ratio:1/1; opacity:.7; filter: drop-shadow(0 10px 40px rgba(var(--brand),.25)); pointer-events:none }
+
+    /* Sections */
+    section{ padding: 4.5rem 0 }
+
+    /* Cards */
+    .grid{ display:grid; gap:1.2rem }
+    .grid.cols-3{ grid-template-columns: repeat(3, minmax(0,1fr)) }
+    .grid.cols-2{ grid-template-columns: repeat(2, minmax(0,1fr)) }
+    @media (max-width: 960px){ .grid.cols-3{ grid-template-columns: 1fr 1fr } }
+    @media (max-width: 700px){ .grid.cols-3,.grid.cols-2{ grid-template-columns: 1fr } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(var(--card), .7), rgba(var(--card), .55));
+      border: 1px solid rgba(130,135,150,.18);
+      border-radius: 20px; padding: 1.3rem; position:relative; overflow:hidden;
+      box-shadow: 0 20px 40px rgba(var(--shadow), .12);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover{ transform: translateY(-4px); box-shadow: 0 26px 60px rgba(var(--shadow), .18); border-color: rgba(88,101,242,.35) }
+    .card h3{ margin: .2rem 0 .6rem; font-size: 1.25rem }
+    .card p{ margin: 0; color: rgba(var(--muted), .95) }
+
+    .badge{ display:inline-flex; align-items:center; gap:.4rem; font-size:.8rem; border: 1px solid rgba(120,125,140,.25); padding:.35rem .6rem; border-radius:999px; color: rgba(var(--muted), .95) }
+    .badge .dot{ width:8px; height:8px; border-radius:999px; background: rgba(var(--brand),1) }
+
+    /* Gallery */
+    .gallery{ display:grid; gap: 1rem; grid-template-columns: 2fr 1fr; }
+    .gallery img{ width:100%; height: 100%; object-fit: cover; border-radius: 18px; box-shadow: 0 16px 40px rgba(var(--shadow), .18) }
+    .gallery .stack{ display:grid; gap:1rem }
+    @media (max-width: 900px){ .gallery{ grid-template-columns: 1fr } }
+
+    /* Testimonials */
+    .quote{ font-family: "Playfair Display", serif; font-size: clamp(1.2rem, .9vw + 1rem, 1.6rem); line-height:1.5; }
+    .quoteer{ display:flex; align-items:center; gap:.8rem; margin-top: .9rem }
+    .avatar{ width:38px; height:38px; border-radius:50%; background: linear-gradient(135deg, rgba(var(--brand),.75), rgba(var(--brand-2),.75)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.25) }
+
+    /* Footer */
+    footer{ padding: 3rem 0; border-top: 1px solid rgba(120,120,120,.18); color: rgba(var(--muted), .95) }
+
+    /* Floating theme toggle */
+    .theme-toggle{ position: fixed; right: 18px; bottom: 18px; z-index: 50 }
+    .toggle-btn{ background: rgba(var(--card),1); border: 1px solid rgba(130,135,150,.25); width: 46px; height: 46px; border-radius: 12px; display:grid; place-items:center; box-shadow: 0 10px 20px rgba(var(--shadow), .18); cursor:pointer }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="#" aria-label="Home">Aurora</a>
+      </div>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#gallery">Showcase</a>
+        <a href="#testimonials">Love</a>
+        <a href="#cta" class="btn">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <span class="h-eyebrow">Stunning by default</span>
+    <h1 class="h-title">A beautiful, modern HTML template — no frameworks needed.</h1>
+    <p class="h-sub">Use this single-file starter to ship a gorgeous landing page quickly. It’s responsive, accessible, and packed with tasteful animations, glassmorphism cards, and soft gradients. Copy, tweak, and launch.</p>
+    <div class="h-cta">
+      <a class="btn" href="#features">Explore Features</a>
+      <a class="btn secondary" href="#cta">Grab the Template</a>
+      <span class="badge"><span class="dot"></span><span>Made with ♥</span></span>
+    </div>
+    <svg class="orbit" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgb(var(--brand))"/>
+          <stop offset="100%" stop-color="rgb(var(--brand-2))"/>
+        </linearGradient>
+      </defs>
+      <circle cx="200" cy="200" r="160" stroke="url(#g1)" stroke-width="2" opacity=".8"/>
+      <circle cx="200" cy="200" r="130" stroke="url(#g1)" stroke-width="2" opacity=".5"/>
+      <circle cx="200" cy="200" r="100" stroke="url(#g1)" stroke-width="2" opacity=".3"/>
+      <circle cx="330" cy="90" r="6" fill="url(#g1)">
+        <animateMotion dur="12s" repeatCount="indefinite" path="M -130 110 A 160 160 0 1 1 160 -130 A 160 160 0 1 1 -130 110 Z"/>
+      </circle>
+    </svg>
+  </header>
+
+  <section id="features">
+    <div class="container">
+      <div class="grid cols-3">
+        <article class="card">
+          <h3>Polished Aesthetics</h3>
+          <p>Soft shadows, subtle gradients, and balanced typography. Looks premium without any heavy libraries.</p>
+        </article>
+        <article class="card">
+          <h3>Responsive by Design</h3>
+          <p>Grid layouts adapt elegantly from wide desktops down to compact mobile screens.</p>
+        </article>
+        <article class="card">
+          <h3>Accessible & Semantic</h3>
+          <p>Landmarks, sensible contrast, and focusable interactive elements out of the box.</p>
+        </article>
+        <article class="card">
+          <h3>Tiny & Fast</h3>
+          <p>One file. Zero build tools. Instant loads and great Lighthouse scores.</p>
+        </article>
+        <article class="card">
+          <h3>Customizable Tokens</h3>
+          <p>Tune CSS variables to quickly rebrand colors, radii, and shadows.</p>
+        </article>
+        <article class="card">
+          <h3>Dark Mode Friendly</h3>
+          <p>Respects your system preference, plus an optional manual toggle.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="container">
+      <div class="grid cols-2">
+        <div>
+          <h2 style="margin:0 0 .6rem; font-size:1.8rem">Showcase</h2>
+          <p style="margin:0 0 1.3rem; color: rgba(var(--muted), .95)">A flexible gallery layout for product shots, app screens, or photography.</p>
+          <div class="gallery" aria-label="Image gallery of sample shots">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1400&auto=format&fit=crop" alt="Team collaborating around a laptop">
+            <div class="stack">
+              <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop" alt="Developer desk with code editor">
+              <img src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1000&auto=format&fit=crop" alt="Minimal phone mockup on gradient surface">
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:1.6rem">
+          <h3 style="margin-top:0">Why it works</h3>
+          <ul style="margin: .4rem 0 0 1rem; padding:0; color: rgba(var(--muted), .95); display:grid; gap:.5rem">
+            <li>Clear visual hierarchy with generous whitespace</li>
+            <li>Glassmorphism cards add depth without clutter</li>
+            <li>Balanced serif/sans typography pairing</li>
+            <li>Soft micro-interactions on hover</li>
+          </ul>
+          <div style="margin-top:1.2rem; display:flex; gap:.6rem; flex-wrap:wrap">
+            <a class="btn" href="#">Primary</a>
+            <a class="btn secondary" href="#">Secondary</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <div class="container">
+      <div class="grid cols-3">
+        <figure class="card">
+          <blockquote class="quote">“Clean, tasteful, and fast. This template saved us days of fiddling with CSS.”</blockquote>
+          <figcaption class="quoteer"><div class="avatar"></div><div><strong>Ayaan P.</strong><br><span style="color:rgba(var(--muted),.95)">Product Designer</span></div></figcaption>
+        </figure>
+        <figure class="card">
+          <blockquote class="quote">“The dark-mode support and tokens make themeing ridiculously easy.”</blockquote>
+          <figcaption class="quoteer"><div class="avatar"></div><div><strong>Meera K.</strong><br><span style="color:rgba(var(--muted),.95)">Frontend Engineer</span></div></figcaption>
+        </figure>
+        <figure class="card">
+          <blockquote class="quote">“One file, no build step, yet it still looks premium. Chef’s kiss.”</blockquote>
+          <figcaption class="quoteer"><div class="avatar"></div><div><strong>Luca S.</strong><br><span style="color:rgba(var(--muted),.95)">Founder</span></div></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="container">
+      <div class="card" style="padding: 2rem; display:grid; gap:1rem; align-items:center; text-align:center">
+        <h2 style="margin:0; font-size: clamp(1.6rem, .8vw + 1.2rem, 2rem);">Ready to build something beautiful?</h2>
+        <p style="margin:0; color: rgba(var(--muted), .95)">Copy this template and make it yours. Swap colors, tweak spacing, and launch.</p>
+        <div style="display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap">
+          <a class="btn" href="#">Download</a>
+          <a class="btn secondary" href="#">View Source</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap">
+      <span>© <span id="y"></span> Aurora. Crafted with care.</span>
+      <span><a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Terms</a></span>
+    </div>
+  </footer>
+
+  <div class="theme-toggle">
+    <button class="toggle-btn" id="toggle" aria-label="Toggle theme" title="Toggle theme">🌓</button>
+  </div>
+
+  <script>
+    // Update copyright year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Optional: manual theme toggle
+    const toggle = document.getElementById('toggle');
+    const KEY = 'pref-theme';
+    function applyTheme(t){
+      document.documentElement.style.colorScheme = t;
+      document.documentElement.dataset.theme = t;
+    }
+    const saved = localStorage.getItem(KEY);
+    if(saved) applyTheme(saved);
+    toggle.addEventListener('click', ()=>{
+      const next = (document.documentElement.dataset.theme === 'dark') ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem(KEY, next);
+    });
+  </script>
+</body>
+</html>

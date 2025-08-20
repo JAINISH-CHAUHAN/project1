@@ -1,52 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple HTML Page</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nova — Beautiful HTML Template</title>
+  <meta name="description" content="A modern, responsive, and accessible single-file HTML template with elegant design and subtle animations." />
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(255, 255, 255, 0.08);
+      --text: #e6e9f2;
+      --muted: #b6bdd3;
+      --primary: #7c5cff;
+      --primary-600: #6a4cf7;
+      --accent: #34d399;
+      --ring: rgba(124, 92, 255, 0.35);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 18px;
+      --blur: 14px;
+      --maxw: 1200px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f7fb;
+        --panel: rgba(255, 255, 255, 0.8);
+        --text: #0e1222;
+        --muted: #4a5166;
+        --primary: #6a4cf7;
+        --primary-600: #5b3cf0;
+        --accent: #10b981;
+        --ring: rgba(90, 69, 230, 0.25);
+        --shadow: 0 10px 30px rgba(16, 22, 40, 0.08);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,0.25), transparent 60%),
+                  radial-gradient(900px 600px at 100% 10%, rgba(52,211,153,0.18), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(100% - 2rem, var(--maxw)); margin-inline: auto; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(180%) blur(14px);
+      background: linear-gradient(180deg, rgba(12,14,26,0.6), rgba(12,14,26,0.2));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 0;
+    }
+    .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 800; letter-spacing: 0.6px; }
+    .brand .logo {
+      width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 6px 18px rgba(124,92,255,.45), inset 0 0 30px rgba(255,255,255,.08);
+    }
+    .nav a { opacity: .9; }
+    .nav ul { display: flex; align-items: center; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+    .nav .cta {
+      padding: .65rem 1rem; border-radius: 999px; background: var(--primary);
+      color: white; font-weight: 600; box-shadow: 0 10px 24px rgba(124,92,255,.35);
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .nav .cta:hover { transform: translateY(-1px); background: var(--primary-600); box-shadow: 0 12px 28px rgba(124,92,255,.45); }
+
+    /* Mobile nav */
+    .menu-btn { display: none; background: transparent; border: 0; font-size: 1.2rem; color: var(--text); }
+    @media (max-width: 820px) {
+      .nav ul.links { display: none; position: absolute; inset: 60px 1rem auto 1rem; background: var(--panel); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: .75rem; box-shadow: var(--shadow); }
+      .nav ul.links.show { display: grid; gap: .4rem; }
+      .menu-btn { display: inline-flex; }
+    }
+
+    /* Hero */
+    .hero { padding: 5rem 0 3.5rem; position: relative; overflow: clip; }
+    .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: .5rem; padding: .3rem .65rem; border-radius: 999px; background: rgba(124,92,255,.12); color: var(--primary); font-weight: 700; letter-spacing: .3px; font-size: .8rem; }
+    .hero h1 { font-size: clamp(2rem, 4.5vw, 4rem); line-height: 1.1; margin: .6rem 0 1rem; }
+    .hero p { font-size: clamp(1rem, 1.4vw, 1.1rem); color: var(--muted); max-width: 60ch; }
+    .actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+    .btn { padding: .85rem 1.2rem; border-radius: 14px; border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); color: var(--text); font-weight: 600; box-shadow: var(--shadow); transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease; }
+    .btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.22); box-shadow: 0 16px 40px rgba(0,0,0,.25); }
+    .btn.primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: 0; }
+
+    .device { position: relative; aspect-ratio: 4/3; border-radius: var(--radius); background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.12); box-shadow: var(--shadow); overflow: hidden; backdrop-filter: blur(var(--blur)); }
+    .device .screen { position: absolute; inset: 12px; border-radius: 14px; background: conic-gradient(from 180deg at 70% 30%, rgba(124,92,255,.5), rgba(52,211,153,.5), rgba(124,92,255,.5)); filter: saturate(120%) contrast(105%); animation: hue 10s linear infinite; }
+    @keyframes hue { from { filter: hue-rotate(0deg) saturate(120%) contrast(105%);} to { filter: hue-rotate(360deg) saturate(120%) contrast(105%);} }
+
+    /* Features */
+    .section { padding: 4rem 0; }
+    .section h2 { font-size: clamp(1.6rem, 2.5vw, 2.4rem); margin: 0 0 1rem; }
+    .muted { color: var(--muted); }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { padding: 1.1rem; border-radius: var(--radius); background: var(--panel); border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); transition: transform .16s ease, border-color .2s ease; }
+    .card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.18); }
+    .card h3 { margin: .2rem 0 .4rem; }
+    .icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; box-shadow: 0 8px 20px rgba(124,92,255,.35); }
+
+    /* Showcase */
+    .showcase { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.2rem; align-items: center; }
+    @media (max-width: 980px) { .showcase { grid-template-columns: 1fr; } }
+    .glass { padding: 1.2rem; border-radius: var(--radius); background: var(--panel); border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); }
+
+    /* Testimonials */
+    .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    @media (max-width: 980px) { .testimonials { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .testimonials { grid-template-columns: 1fr; } }
+    .quote { position: relative; padding: 1.2rem; border-radius: var(--radius); background: var(--panel); border: 1px solid rgba(255,255,255,.08); }
+    .quote::before { content: "\201C"; position: absolute; top: -.8rem; left: .8rem; font-size: 3rem; color: var(--primary); opacity: .35; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: inline-block; margin-right: .6rem; vertical-align: middle; }
+
+    /* Pricing */
+    .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    @media (max-width: 980px) { .pricing { grid-template-columns: 1fr; } }
+    .plan { padding: 1.2rem; border-radius: var(--radius); background: var(--panel); border: 1px solid rgba(255,255,255,.08); position: relative; overflow: hidden; }
+    .plan.featured { border-color: rgba(124,92,255,.5); box-shadow: 0 18px 60px rgba(124,92,255,.25); }
+    .price { font-size: 2rem; font-weight: 800; }
+    .check { margin-right: .5rem; }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(255,255,255,.08); padding: 2.5rem 0; color: var(--muted); }
+
+    /* Focus styles */
+    :is(a, button, input, textarea, select):focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 2px;
+      border-radius: 10px;
+      transition: outline-color .15s ease;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Welcome to My Website</h1>
-    <p>A very simple HTML page</p>
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="logo" aria-hidden="true">⚡</span>
+        <span>Nova</span>
+      </a>
+      <button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button>
+      <ul class="links" role="menubar" aria-label="Main navigation">
+        <li><a href="#features" role="menuitem">Features</a></li>
+        <li><a href="#showcase" role="menuitem">Showcase</a></li>
+        <li><a href="#pricing" role="menuitem">Pricing</a></li>
+        <li><a href="#contact" role="menuitem">Contact</a></li>
+      </ul>
+      <a href="#pricing" class="cta">Get Started</a>
+    </div>
   </header>
 
-  <nav>
-    <a href="#home">Home</a> |
-    <a href="#about">About</a> |
-    <a href="#contact">Contact</a>
-  </nav>
-
   <main>
-    <section id="home">
-      <h2>Home</h2>
-      <p>This is the home section.</p>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">NEW • Version 2.0</span>
+          <h1>Build stunning pages in minutes.</h1>
+          <p>Nova is a beautiful, single‑file HTML template with glassmorphism, soft shadows, and tasteful motion. It’s fully responsive and accessible out of the box.</p>
+          <div class="actions">
+            <a class="btn primary" href="#features">Explore Features</a>
+            <a class="btn" href="#showcase">See it in action</a>
+          </div>
+        </div>
+        <div class="device" aria-hidden="true">
+          <div class="screen"></div>
+        </div>
+      </div>
     </section>
 
-    <section id="about">
-      <h2>About</h2>
-      <p>This section tells you about us.</p>
+    <!-- Features -->
+    <section id="features" class="section">
+      <div class="container">
+        <h2>Design that feels effortless</h2>
+        <p class="muted">Clean layout, elegant components, and thoughtful defaults so you can focus on content instead of wrestling with CSS.</p>
+        <div class="grid" style="margin-top: 1rem;">
+          <article class="card">
+            <div class="icon">🎨</div>
+            <h3>Beautiful Aesthetics</h3>
+            <p>Subtle gradients, glass panels, and soft shadows combine for a premium, modern look.</p>
+          </article>
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3>Fast & Lightweight</h3>
+            <p>No frameworks required. Just semantic HTML, modern CSS, and a tiny sprinkle of JS.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔒</div>
+            <h3>Accessible</h3>
+            <p>Keyboard focus styles and semantic structure baked in for an inclusive experience.</p>
+          </article>
+          <article class="card">
+            <div class="icon">📱</div>
+            <h3>Responsive</h3>
+            <p>Fluid grids and clamp-based typography adapt beautifully to any screen size.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧩</div>
+            <h3>Reusable</h3>
+            <p>Cards, buttons, and sections you can copy, paste, and remix for your own project.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🛡️</div>
+            <h3>Future‑Friendly</h3>
+            <p>Prefers‑color‑scheme support, CSS variables, and progressive enhancement.</p>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <form>
-        <label>Name:<br>
-          <input type="text" name="name">
-        </label><br><br>
-        <label>Email:<br>
-          <input type="email" name="email">
-        </label><br><br>
-        <label>Message:<br>
-          <textarea name="message" rows="4"></textarea>
-        </label><br><br>
-        <button type="submit">Send</button>
-      </form>
+    <!-- Showcase -->
+    <section id="showcase" class="section">
+      <div class="container showcase">
+        <div class="glass">
+          <h2>Showcase</h2>
+          <p class="muted">Use these content blocks to highlight product screens, illustrations, or key messages. Replace placeholders with your own media.</p>
+          <div class="grid" style="margin-top:1rem;">
+            <div class="card" style="aspect-ratio: 16/9; display:grid; place-items:center;">Hero Image / Video</div>
+            <div class="card" style="aspect-ratio: 1; display:grid; place-items:center;">Gallery</div>
+            <div class="card" style="aspect-ratio: 1; display:grid; place-items:center;">Stats</div>
+          </div>
+        </div>
+        <div class="device" aria-hidden="true">
+          <div class="screen"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section">
+      <div class="container">
+        <h2>Loved by creators</h2>
+        <div class="testimonials" style="margin-top:1rem;">
+          <figure class="quote">
+            <blockquote>
+              “This template nails modern aesthetics without getting in my way. Absolute joy to work with.”
+            </blockquote>
+            <figcaption>
+              <span class="avatar"></span>
+              <strong>Alex • Product Designer</strong>
+            </figcaption>
+          </figure>
+          <figure class="quote">
+            <blockquote>
+              “Clean, responsive, and load times are fantastic. It became my go‑to starter.”
+            </blockquote>
+            <figcaption>
+              <span class="avatar"></span>
+              <strong>Priya • Frontend Engineer</strong>
+            </figcaption>
+          </figure>
+          <figure class="quote">
+            <blockquote>
+              “The glassmorphism touches are chef’s kiss. Clients love it, and so do I.”
+            </blockquote>
+            <figcaption>
+              <span class="avatar"></span>
+              <strong>Marco • Freelancer</strong>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="section">
+      <div class="container">
+        <h2>Simple pricing</h2>
+        <p class="muted">Start free. Upgrade when you need more.</p>
+        <div class="pricing" style="margin-top:1rem;">
+          <div class="plan">
+            <h3>Starter</h3>
+            <p class="muted">For personal sites</p>
+            <p class="price">$0<span class="muted" style="font-size:.9rem;">/mo</span></p>
+            <ul>
+              <li><span class="check">✔</span> 1 project</li>
+              <li><span class="check">✔</span> Basic components</li>
+              <li><span class="check">✔</span> Email support</li>
+            </ul>
+            <a class="btn" href="#">Get started</a>
+          </div>
+          <div class="plan featured">
+            <h3>Pro</h3>
+            <p class="muted">For growing products</p>
+            <p class="price">$19<span class="muted" style="font-size:.9rem;">/mo</span></p>
+            <ul>
+              <li><span class="check">✔</span> Unlimited projects</li>
+              <li><span class="check">✔</span> Premium components</li>
+              <li><span class="check">✔</span> Priority support</li>
+            </ul>
+            <a class="btn primary" href="#">Upgrade</a>
+          </div>
+          <div class="plan">
+            <h3>Team</h3>
+            <p class="muted">For collaboration</p>
+            <p class="price">$49<span class="muted" style="font-size:.9rem;">/mo</span></p>
+            <ul>
+              <li><span class="check">✔</span> Everything in Pro</li>
+              <li><span class="check">✔</span> Team libraries</li>
+              <li><span class="check">✔</span> SSO & roles</li>
+            </ul>
+            <a class="btn" href="#">Contact sales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="grid">
+          <div>
+            <h2>Let’s create something beautiful</h2>
+            <p class="muted">Have questions or want customizations? Send a message and I’ll get back to you soon.</p>
+          </div>
+          <form class="card" onsubmit="event.preventDefault(); alert('Thanks! This is a static demo.');">
+            <label>
+              <span>Name</span>
+              <input type="text" required placeholder="Your name" style="width:100%;margin-top:.3rem;margin-bottom:.6rem;padding:.75rem;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--text);">
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" required placeholder="you@example.com" style="width:100%;margin-top:.3rem;margin-bottom:.6rem;padding:.75rem;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--text);">
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea rows="4" required placeholder="Tell me a little about your project…" style="width:100%;margin-top:.3rem;margin-bottom:.6rem;padding:.75rem;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--text);"></textarea>
+            </label>
+            <button class="btn primary" type="submit">Send message</button>
+          </form>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 My Website</p>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <p>© <span id="year"></span> Nova. Crafted with ♥</p>
+      <div style="display:flex;gap:.6rem;">
+        <a class="btn" href="#">Twitter</a>
+        <a class="btn" href="#">GitHub</a>
+        <a class="btn" href="#">Dribbble</a>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.querySelector('.menu-btn');
+    const links = document.querySelector('.links');
+    menuBtn?.addEventListener('click', () => {
+      const isOpen = links.classList.toggle('show');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
